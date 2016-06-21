@@ -1,18 +1,18 @@
-From ubuntu:trusty
-MAINTAINER Elliott Ye
+From centos:7
 
-# Set noninteractive mode for apt-get
-ENV DEBIAN_FRONTEND noninteractive
+RUN yum -y install epel-release \
+    && yum -y install python34-devel net-tools\
+       	      	      postfix rsyslog \
+                      cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain \
+    && yum clean all
 
-# Update
-RUN apt-get update
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.4 && \
+    pip3 install chaperone
 
-# Start editing
-# Install package here for cache
-RUN apt-get -y install supervisor postfix sasl2-bin opendkim opendkim-tools
+COPY chaperone.conf /etc/chaperone.d/chaperone.conf
 
-# Add files
-ADD assets/install.sh /opt/install.sh
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
 
-# Run
-CMD /opt/install.sh;/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["run"]
