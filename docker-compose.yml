@@ -5,7 +5,7 @@ services:
     image: postfix
     container_name: postfix
     environment:
-      - MTP_HOST=mail.example.com
-      - MTP_USERS=test@mail.example.com:test
+      - MTA_HOST=mail.example.com
+      - MTA_USERS=test@mail.example.com:test
     ports:
       - "25:25"
