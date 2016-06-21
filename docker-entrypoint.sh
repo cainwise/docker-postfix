@@ -3,8 +3,8 @@
 function run {
     postconf -e 'inet_interfaces = all'
 
-    if [ ! -z "$MTP_HOST" ]; then
-	postconf -e "myhostname = $MTP_HOST"
+    if [ ! -z "$MTA_HOST" ]; then
+	postconf -e "myhostname = $MTA_HOST"
     fi
 
     postconf -e 'myorigin = $mydomain'
@@ -31,8 +31,8 @@ function run {
     postconf -e 'smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination'
 
     # Generate sasldb2
-    echo $MTP_USERS | tr , \\n | while IFS=':' read -r _user _password; do
-	echo $_password | saslpasswd2 -p -c -u $MTP_HOST $_user
+    echo $MTA_USERS | tr , \\n | while IFS=':' read -r _user _password; do
+	echo $_password | saslpasswd2 -p -c -u $MTA_HOST $_user
     done
     chown postfix.saslauth /etc/sasldb2
 
