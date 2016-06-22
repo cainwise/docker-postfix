@@ -1,10 +1,7 @@
-docker-postfix
-==============
-Run postfix with smtp authentication (sasldb) in a docker container.
+# docker-postfix
+支持的 SMTP 验证的 Postfix 容器。 可选的 OpenDKIM 和 TLS 支持。
 
-TLS and OpenDKIM support are optional.
-
-## Usage
+## 使用方法
 
 > `user:passwd` 形如 `username@mail.example.com:password`。
 
@@ -63,7 +60,7 @@ MX 记录所指的主机名称，不应该是别名（CNAME 记录）。在正�
 > PTR 记录的设置多由主机提供商提供。
 
 ### 实践
-假设 Postfix 运行在 `email.m31271n.com`  上，
+假设 Postfix 运行在 `email.m31271n.com` 上：
 
 | Type   | Host              | Answer            |
 |--------|-------------------|-------------------|
