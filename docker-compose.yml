@@ -9,3 +9,4 @@ services:
       - MTA_USERS=test@mail.example.com:test
     ports:
       - "25:25"
+    restart: always
