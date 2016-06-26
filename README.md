@@ -162,13 +162,13 @@ Mechanism 包括：
 * `include`
 
 每个 Mechanism 可以有四种前缀：
-1. `+` Pass （通过）
-2. `-` Fail （拒绝）
-3. `~` Soft Fail （软拒绝）
-4. `?` Neutual （中立）
+* `+` Pass （通过）
+* `-` Fail （拒绝）
+* `~` Soft Fail （软拒绝）
+* `?` Neutual （中立）
 
-测试时，将从前往后依次测试每个 Mechanism。如果一个 Mechanism 包含了要查询的 IP 地址（称为命中），则测试结果
-由相应 Mechanism 的前缀决定。默认的前缀为 `+`。如果测试完所有的 Mechanism，都没有命中，则结果为 Netual。
+测试时，将从前往后依次测试每个 Mechanism。如果一个 Mechanism 包含了要查询的 IP 地址（称为命中），则测试结果由相应 Mechanism 的前缀决定。
+默认的前缀为 `+`。如果测试完所有的 Mechanism，都没有命中，则结果为 Netual。
 
 除了以上四种情况，还有 None（无结果）、PermError（永久错误）和 TempError（临时错误）三种其他情况。对于这些情况的解释和服务器通常的处理办法如下：
 
@@ -188,7 +188,7 @@ Mechanism 包括：
 
 > `v=spf1` 是必须写在头部的，它表示采用 SPF 第一版标准。
 
-介绍上面提到的 Mechanism：
+开始介绍上面提到的 Mechanism。
 
 ##### all
 表示所有 IP，肯定会命中，因此通常把它放在 SPF 记录的结尾，表示处理剩下的所有情况，比如：
