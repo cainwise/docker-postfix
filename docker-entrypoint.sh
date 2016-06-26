@@ -99,7 +99,7 @@ EOF
     DKIM_KEYDIR=/etc/opendkim/keys
     # A Selector is created while generating keys, a selector can be unique
     # keyword which is associated in keys and included in DKIM signature.
-    DKIM_SELECTOR=default
+    DKIM_SELECTOR=mail
 
     if [ -z "$(find $DKIM_KEYDIR -iname *.private)" ]; then
 	echo "OpenDKIM: Default DKIM keys for $DOMAIN doesn't exist, generating..."
