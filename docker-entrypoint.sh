@@ -82,15 +82,15 @@ EOF
     # postconf -e 'smtpd_tls_auth_only = yes'
     TLSDIR=/etc/postfix/tls
     mkdir -p $TLSDIR
-    CA=$(find $TLSDIR -name *.crt)
-    PRIVATE_KEY=$(find $TLSDIR -name *.key)
+    TLS_CRT=$(find $TLSDIR -name *.crt)
+    TLS_KEY=$(find $TLSDIR -name *.key)
 
-    if [ -n "$CA" -a -n "$PRIVATE_KEY" ]; then
+    if [ -n "$TLS_CRT" -a -n "$TLS_KEY" ]; then
 	echo "TLS: $CA and $PRIVATE_KEY are found, enabling..."
 	# Configures the server certificate file and key file as well as the CA's
 	# intermediate certificate file.
-	postconf -e "smtp_tls_cert_file = $CA"
-	postconf -e "smtp_tls_key_file= $PRIVATE_KEY"
+	postconf -e "smtpd_tls_cert_file = $TLS_CRT"
+	postconf -e "smtpd_tls_key_file= $TLS_KEY"
 	chown -R root:root $TLSDIR
 	chmod 0400 $TLSDIR/*.*
 
