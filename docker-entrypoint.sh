@@ -85,7 +85,7 @@ EOF
     CA=$(find $TLSDIR -name *.crt)
     PRIVATE_KEY=$(find $TLSDIR -name *.key)
 
-    if [ -n "$CA" -a -n "$PRIVIATE_KEY" ]; then
+    if [ -n "$CA" -a -n "$PRIVATE_KEY" ]; then
 	echo "TLS: $CA and $PRIVATE_KEY are found, enabling..."
 	# Configures the server certificate file and key file as well as the CA's
 	# intermediate certificate file.
@@ -107,10 +107,10 @@ EOF
 	# Postfix SMTP server and the remote SMTP client negotiate a session, which
 	# takes some computer time and network bandwidth. SSL protocol versions other
 	# than SSLv2 support resumption of cached sessions.
-	smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_scache
+	postconf -e "smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_scache"
 	# Cached Postfix SMTP server session information expires after a certain
 	# amount of time.RFC2246 recommends a maximum of 24 hours.
-	smtpd_tls_session_cache_timeout = 10800s
+	postconf -e "smtpd_tls_session_cache_timeout = 10800s"
     else
 	echo "TLS: Certificate and Private key are missing, skip..."
     fi
@@ -122,7 +122,7 @@ EOF
     # keyword which is associated in keys and included in DKIM signature.
     DKIM_SELECTOR=mail
 
-    if [ -z "$(find $DKIM_KEYDIR -iname *.private)" ]; then
+    if [ -z "$(find $DKIM_KEYDIR -name *.private)" ]; then
 	echo "OpenDKIM: Default DKIM keys for $MTA_DOMAIN doesn't exist, generating..."
 	opendkim-genkey -D $DKIM_KEYDIR -s $DKIM_SELECTOR -d $MTA_DOMAIN
 	echo "OpenDKIM: Default DKIM keys for $MTA_DOMAIN created in $DKIM_KEYDIR"
