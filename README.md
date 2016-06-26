@@ -274,6 +274,7 @@ SPF 记录中还可以包含两种可选的 Modifier，一个 Modifier 只能出
 
 #### 测试 SPF
 * [Beveridge SPF Test](http://tools.bevhost.com/spf/)：验证 SPF 是否通过的工具
+
 #### 了解更多
 * [SPF: WHY?](http://www.openspf.org/Why)：为什么我发的邮件被拒绝了？
 * [RFC 4408](http://www.openspf.org/RFC_4408)：SPFv1 标准
