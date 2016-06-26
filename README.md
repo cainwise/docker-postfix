@@ -11,7 +11,6 @@
             - [所有 MX 主机必须有合法的 A 记录](#-mx--a-)
             - [MX 记录不可以指向别名](#mx-)
             - [MX 记录应该指向主机名称，而非 IP 地址](#mx--ip-)
-            - [PTR 记录](#ptr-)
         - [实践](#)
     - [避免你的邮件被当成垃圾邮件](#)
         - [确定发送的不是垃圾](#)
@@ -30,6 +29,8 @@
             - [Modifier](#modifier)
                 - [redirect](#redirect)
                 - [exp](#exp)
+            - [测试 SPF](#-spf)
+            - [了解更多](#)
         - [配置 DKIM 记录](#-dkim-)
     - [测试](#)
     - [参考](#)
@@ -271,6 +272,12 @@ SPF 记录中还可以包含两种可选的 Modifier，一个 Modifier 只能出
 ##### exp
 格式为 `exp=<domain>`。如果邮件被拒绝，可以给出一个消息，消息的具体内容会先对 <domain> 进行 TXT 查询，然后执行宏拓展得到。
 
+#### 测试 SPF
+* [Beveridge SPF Test](http://tools.bevhost.com/spf/)：验证 SPF 是否通过的工具
+#### 了解更多
+* [SPF: WHY?](http://www.openspf.org/Why)：为什么我发的邮件被拒绝了？
+* [RFC 4408](http://www.openspf.org/RFC_4408)：SPFv1 标准
+
 ### 配置 DKIM 记录
 
 ## 测试
@@ -283,6 +290,7 @@ SPF 记录中还可以包含两种可选的 Modifier，一个 Modifier 只能出
 + [Postfix Legacy TLS Support](http://www.postfix.org/TLS_README.html)
 + [Postfix SASL Howto](http://www.postfix.org/SASL_README.html)
 + [Managing multiple Postfix instances on a single host](http://www.postfix.org/MULTI_INSTANCE_README.html)
++ [SPF 记录：原理、语法及配置方法简介](https://www.renfei.org/blog/introduction-to-spf.html)
 
 encoding
 dkim
