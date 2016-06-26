@@ -292,7 +292,7 @@ DMARC 记录允许邮件发送方声明自己的邮件被 SPF 和／或 DKIM 保
 更详细内容可以查看 [DMARC Overview](https://dmarc.org/overview/)。
 
 DMARC 记录中用来给出操作指示的参数：
-* `p` 告知邮件接收者，当检测到某封邮件在伪造邮件发送者，邮件接收者要做出什么样的处理。处理的方式有：
+* `p` 告知邮件接收方，当检测到某封邮件在伪造邮件发送方，邮件接收方要做出什么样的处理。处理的方式有：
   * `none`：不做任何处理
   * `quarantine`：将邮件标记为垃圾邮件
   * `reject`：拒绝该邮件
@@ -323,11 +323,3 @@ DMARC 记录中用来建立数据反馈机制的参数：
 + [Postfix SASL Howto](http://www.postfix.org/SASL_README.html)
 + [Managing multiple Postfix instances on a single host](http://www.postfix.org/MULTI_INSTANCE_README.html)
 + [SPF 记录：原理、语法及配置方法简介](https://www.renfei.org/blog/introduction-to-spf.html)
-
-encoding
-dkim
-spf
-dmarc
-dns reverse record
-mail blacklist
-spamassassin
