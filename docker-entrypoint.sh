@@ -102,11 +102,11 @@ EOF
     DKIM_SELECTOR=mail
 
     if [ -z "$(find $DKIM_KEYDIR -iname *.private)" ]; then
-	echo "OpenDKIM: Default DKIM keys for $DOMAIN doesn't exist, generating..."
-	opendkim-genkey -D $DKIM_KEYDIR -s $DKIM_SELECTOR -d $DOMAIN
-	echo "OpenDKIM: Default DKIM keys for $DOMAIN created in $DKIM_KEYDIR"
+	echo "OpenDKIM: Default DKIM keys for $MTA_DOMAIN doesn't exist, generating..."
+	opendkim-genkey -D $DKIM_KEYDIR -s $DKIM_SELECTOR -d $MTA_DOMAIN
+	echo "OpenDKIM: Default DKIM keys for $MTA_DOMAIN created in $DKIM_KEYDIR"
     else
-	echo "OpenDKIM: Default DKIM keys for $DOMAIN exists, skip..."
+	echo "OpenDKIM: Default DKIM keys for $MTA_DOMAIN exists, skip..."
     fi
 
     # $DKIM_SELECTOR.private is the private key for the domain
@@ -131,7 +131,7 @@ Mode                sv
 Socket              inet:8891@127.0.0.1
 
 Selector	    ${DKIM_SELECTOR}
-Domain              ${DOMAIN}
+Domain              ${MTA_DOMAIN}
 KeyFile             ${DKIM_KEYDIR}/${DKIM_SELECTOR}.private
 Canonicalization    relaxed/simple
 ExternalIgnoreList  refile:${DKIM_TRUSTED_HOSTS}
@@ -144,21 +144,21 @@ EOF
     cat >> $DKIM_KEY_TABLE <<EOF
 
 # Set by docker-postfix
-${DKIM_SELECTOR}._domainkey.${DOMAIN} ${DOMAIN}:${DKIM_SELECTOR}:${DKIM_KEYDIR}/${DKIM_SELECTOR}.private
+${DKIM_SELECTOR}._domainkey.${MTA_DOMAIN} ${MTA_DOMAIN}:${DKIM_SELECTOR}:${DKIM_KEYDIR}/${DKIM_SELECTOR}.private
 EOF
 
     echo "OpenDKIM: Configuring $DKIM_SIGNING_TABLE..."
     cat >> $DKIM_SIGNING_TABLE <<EOF
 
 # Set by docker-postfix
-*@${DOMAIN} ${DKIM_SELECTOR}._domainkey.${DOMAIN}
+*@${MTA_DOMAIN} ${DKIM_SELECTOR}._domainkey.${MTA_DOMAIN}
 EOF
 
     echo "OpenDKIM: Configuring $DKIM_TRUSTED_HOSTS..."
     cat >> $DKIM_TRUSTED_HOSTS <<EOF
 
 # Set by docker-postfix
-*.${DOMAIN}
+*.${MTA_DOMAIN}
 EOF
 
     echo "OpenDKIM: Configuring Postfix..."
