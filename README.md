@@ -49,13 +49,13 @@
 
     ```sh
     shell> docker run
-	           -p 25:25 \
-			   -p 587:587 \ # TLS 支持，可选
-			   -e MTA_DOMAIN=example.com \
+               -p 25:25 \
+               -p 587:587 \ # TLS 支持，可选
+               -e MTA_DOMAIN=example.com \
                -e MTA_HOST=mail.example.com \
-			   -e MTA_USERS=user:passwd \     # 要创建多个用户时，使用半角逗号隔开: -e MTA_USERS=user1:passwd1,...,userN:passwdN
-			   -v dkim_keys:/etc/opendkim/keys \
-			   -v tls:/etc/postfix/tls \ # TLS 支持，可选
+               -e MTA_USERS=user:passwd \     # 要创建多个用户时，使用半角逗号隔开: -e MTA_USERS=user1:passwd1,...,userN:passwdN
+               -v dkim_keys:/etc/opendkim/keys \
+               -v tls:/etc/postfix/tls \ # TLS 支持，可选
                --name postfix -d m31271n/postfix
     ```
 
