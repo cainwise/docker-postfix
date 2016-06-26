@@ -87,9 +87,30 @@ EOF
 
     if [ -n "$CA" -a -n "$PRIVIATE_KEY" ]; then
 	echo "TLS: $CA and $PRIVATE_KEY are found, enabling..."
+	# Configures the server certificate file and key file as well as the CA's
+	# intermediate certificate file.
 	postconf -e "smtp_tls_cert_file = $CA"
 	postconf -e "smtp_tls_key_file= $PRIVATE_KEY"
 	chmod 0400 $TLSDIR/*.*
+
+	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP
+	# clients, but does not require that clients use TLS encryption.
+	postconf -e "smtpd_use_tls = yes"
+	postconf -e "smtpd_tls_security_level = may"
+
+	# Enable logging of summary message for TLS handshake and to include
+	# information about the protocol and cipher used as well as the client and
+	# issuer CommonName
+	postconf -e "smtpd_tls_loglevel = 0"
+	postconf -e "smtpd_tls_received_header = yes"
+
+	# Postfix SMTP server and the remote SMTP client negotiate a session, which
+	# takes some computer time and network bandwidth. SSL protocol versions other
+	# than SSLv2 support resumption of cached sessions.
+	smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_scache
+	# Cached Postfix SMTP server session information expires after a certain
+	# amount of time.RFC2246 recommends a maximum of 24 hours.
+	smtpd_tls_session_cache_timeout = 10800s
     else
 	echo "TLS: Certificate and Private key are missing, skip..."
     fi
