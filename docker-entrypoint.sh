@@ -79,7 +79,7 @@ EOF
     chown postfix.saslauth /etc/sasldb2
 
     ## TLS configuration
-    # postconf -e 'smtpd_tls_auth_only = yes'
+
     TLSDIR=/etc/postfix/tls
     mkdir -p $TLSDIR
     TLS_CRT=$(find $TLSDIR -name *.crt)
@@ -95,7 +95,6 @@ EOF
 
 	if [ -n "$TLS_CA" ]; then
 	    postconf -e "smtpd_tls_CAfile = $TLS_CA"
-	    postconf -e 'smtp_tls_CAfile = $smtpd_tls_CAfile'
 	fi
 	chown -R root:root $TLSDIR
 	chmod 0400 $TLSDIR/*.*
@@ -103,12 +102,13 @@ EOF
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP
 	# clients, but does not require that clients use TLS encryption.
 	postconf -e 'smtpd_use_tls = yes'
+	postconf -e 'smtpd_tls_auth_only = yes'
 	postconf -e 'smtpd_tls_security_level = may'
 
 	# Enable logging of summary message for TLS handshake and to include
 	# information about the protocol and cipher used as well as the client and
 	# issuer CommonName
-	postconf -e 'smtpd_tls_loglevel = 0'
+	postconf -e 'smtpd_tls_loglevel = 1'
 	postconf -e 'smtpd_tls_received_header = yes'
 
 	# Postfix SMTP server and the remote SMTP client negotiate a session, which
