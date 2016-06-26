@@ -16,7 +16,7 @@
         - [确定发送的不是垃圾](#)
         - [查看你是否在黑名单中](#)
         - [配置 PTR 记录](#-ptr-)
-        - [配置 SPF（Sender Policy Framework） 记录](#-spfsender-policy-framework-)
+        - [配置 SPF（Sender Policy Framework）记录](#-spfsender-policy-framework)
             - [SPF 记录的语法规则](#spf-)
             - [Mechanism](#mechanism)
                 - [all](#all)
@@ -31,7 +31,8 @@
                 - [exp](#exp)
             - [测试 SPF](#-spf)
             - [了解更多](#)
-        - [配置 DKIM 记录](#-dkim-)
+        - [配置 DKIM（DomainKeys Identified Mail）记录](#-dkimdomainkeys-identified-mail)
+        - [配置 DMARC 记录](#-dmarc-)
     - [测试](#)
     - [参考](#)
 
@@ -281,6 +282,35 @@ SPF 记录中还可以包含两种可选的 Modifier，一个 Modifier 只能出
 
 ### 配置 DKIM（DomainKeys Identified Mail）记录
 DKIM 是另一种验证邮件有效性的方法。DKIM 在 DNS 公开一个公钥，然后用私钥对自己的邮件签名。邮件接收方查询发送方域名的 DNS 记录以获得公钥，然后验证签名是否有效。
+
+> docker-postfix 已经集成了 OpenDKIM。只需要将 Docker 容器日志中显示的公钥添加到 DNS 即可。
+
+### 配置 DMARC 记录
+DMARC 记录允许邮件发送方声明自己的邮件被 SPF 和／或 DKIM 保护，并且在 SPF 和/或 DKIM 验证未通过时，给出操作指示。
+同时还能在邮件收发双方之间建立起一个数据反馈机制。
+
+更详细内容可以查看 [DMARC Overview](https://dmarc.org/overview/)。
+
+DMARC 记录中用来给出操作指示的参数：
+* `p` 告知邮件接收者，当检测到某封邮件在伪造邮件发送者，邮件接收者要做出什么样的处理。处理的方式有：
+  * `none`：不做任何处理
+  * `quarantine`：将邮件标记为垃圾邮件
+  * `reject`：拒绝该邮件
+
+> 初期建议设置为 `none`。
+
+DMARC 记录中用来建立数据反馈机制的参数：
+* `rua` 邮件接收方检测一段时间后，将这段时间内的统计报告，发送到哪个邮箱地址。
+* `ruf` 邮件接收方检测到伪造邮件时，将该伪造信息的报告发送到那个邮箱。
+
+
+假设 DNS 记录是这样的：
+
+| Type   | Host              | Answer              |
+|--------|-------------------|---------------------|
+| TXT    | _dmarc.m31271n.com| `v=DMARC1; p=reject; rua=m31271n@m31271n.com` |
+
+这样的配置的意义是：拒绝伪造邮件，并将一段时间内汇总报告发送给到 m31271n@m31271n.com。
 
 ## 测试
 * 测试工具：[Mail Tester](http://www.mail-tester.com/)
