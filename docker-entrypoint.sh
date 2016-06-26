@@ -91,6 +91,7 @@ EOF
 	# intermediate certificate file.
 	postconf -e "smtp_tls_cert_file = $CA"
 	postconf -e "smtp_tls_key_file= $PRIVATE_KEY"
+	chown -R root:root $TLSDIR
 	chmod 0400 $TLSDIR/*.*
 
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP
