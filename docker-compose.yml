@@ -9,8 +9,9 @@ services:
       - MTA_HOST=mail.example.com
       - MTA_USERS=test@mail.example.com:test
     volumes:
-      - dkim_keys:/etc/opendkim/keys
-      - tls:/etc/postfix/tls
+      - ./dkim_keys:/etc/opendkim/keys
+      - ./tls:/etc/postfix/tls
     ports:
       - "25:25"
+      - "587:587"
     restart: always
