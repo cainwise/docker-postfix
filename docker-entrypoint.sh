@@ -66,22 +66,30 @@ function run {
     # a client RCPT TO command, after smtpd_relay_restrictions.
     postconf -e 'smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination'
 
-    ## TLS configuration
-    # postconf -e 'smtpd_tls_auth_only = yes'
-
     # Use sasl2
     cat > /etc/sasl2/smtpd.conf <<EOF
 pwcheck_method: auxprop
 auxprop_plugin: sasldb
 mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
 EOF
-
     # Generate sasldb2
     echo $MTA_USERS | tr , \\n | while IFS=':' read -r _user _password; do
 	echo $_password | saslpasswd2 -p -c -u $MTA_HOST $_user
     done
     chown postfix.saslauth /etc/sasldb2
 
+    ## TLS configuration
+    # postconf -e 'smtpd_tls_auth_only = yes'
+    CA=$(find /etc/postfix/tls -name *.crt)
+    PRIVATE_KEY=$(find /etc/postfix/tls -name *.key)
+
+    if [ -n "$CA" && -n "$PRIVIATE_KEY" ]; then
+	postconf -e "smtp_tls_cert_file = $CA"
+	postconf -e "smtp_tls_key_file= $PRIVATE_KEY"
+	chmod 0400 /etc/postfix/tls/*.*
+    fi
+
+    
     # Launch
     exec chaperone
 }

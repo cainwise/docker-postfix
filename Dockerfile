@@ -1,13 +1,14 @@
 From centos:7
 
 RUN yum -y install epel-release \
-    && yum -y install python34-devel net-tools\
-       	      	      postfix rsyslog \
+    && yum -y install python34-devel && \
+       curl https://bootstrap.pypa.io/get-pip.py | python3.4 && \
+       pip3 install chaperone \
+    && yum -y install net-tools \
+                      postfix rsyslog \
                       cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain \
+		      opendkim \
     && yum clean all
-
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3.4 && \
-    pip3 install chaperone
 
 COPY chaperone.conf /etc/chaperone.d/chaperone.conf
 
