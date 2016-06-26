@@ -39,7 +39,7 @@
 <!-- markdown-toc end -->
 
 # docker-postfix
-支持的 SMTP 验证的 Postfix 容器。 可选的 OpenDKIM 和 TLS 支持。
+支持的 SMTP 验证的 Postfix 容器，必选的 OpenDKIM 支持以及可选的 TLS 支持。
 
 ## 使用方法
 
@@ -49,17 +49,11 @@
 
     ```sh
     shell> docker run -p 25:25 \
-               -e MTA_HOST=mail.example.com -e MTA_USERS=user:passwd \
+               -e MTA_HOST=mail.example.com \
+			   -e MTA_USERS=user:passwd \
+			   -v /path/to/dkim_keys:/etc/opendkim/keys \
                --name postfix -d m31271n/postfix
     # Set multiple user credentials: -e MTA_USERS=user1:passwd1,user2:passwd2,...,userN:passwdN
-    ```
-### 启用 OpenDKIM
-
-    ```sh
-    shell> docker run -p 25:25 \
-               -e MTA_HOST=mail.example.com -e MTA_USERS=user:passwd \
-               -v /path/to/domainkeys:/etc/opendkim/domainkeys \
-               --name postfix -d m31271n/postfix
     ```
 ### 启用 TLS(587)
 
