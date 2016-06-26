@@ -5,9 +5,10 @@ RUN yum -y install epel-release \
        curl https://bootstrap.pypa.io/get-pip.py | python3.4 && \
        pip3 install chaperone \
     && yum -y install net-tools \
+                      openssl \
                       postfix rsyslog \
                       cyrus-sasl cyrus-sasl-lib cyrus-sasl-plain \
-		      opendkim \
+                      opendkim \
     && yum clean all
 
 COPY chaperone.conf /etc/chaperone.d/chaperone.conf

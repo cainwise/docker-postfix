@@ -80,17 +80,93 @@ EOF
 
     ## TLS configuration
     # postconf -e 'smtpd_tls_auth_only = yes'
-    CA=$(find /etc/postfix/tls -name *.crt)
-    PRIVATE_KEY=$(find /etc/postfix/tls -name *.key)
+    TLSDIR=/etc/postfix/tls
+    mkdir -p $TLSDIR
+    CA=$(find $TLSDIR -name *.crt)
+    PRIVATE_KEY=$(find $TLSDIR -name *.key)
 
-    if [ -n "$CA" && -n "$PRIVIATE_KEY" ]; then
+    if [ -n "$CA" -a -n "$PRIVIATE_KEY" ]; then
+	echo "TLS: $CA and $PRIVATE_KEY are found, enabling..."
 	postconf -e "smtp_tls_cert_file = $CA"
 	postconf -e "smtp_tls_key_file= $PRIVATE_KEY"
-	chmod 0400 /etc/postfix/tls/*.*
+	chmod 0400 $TLSDIR/*.*
+    else
+	echo "TLS: Certificate and Private key are missing, skip..."
     fi
 
-    
-    # Launch
+    ## OpenDKIM
+    # Directory to store DKIM keys
+    DKIM_KEYDIR=/etc/opendkim/keys
+    # A Selector is created while generating keys, a selector can be unique
+    # keyword which is associated in keys and included in DKIM signature.
+    DKIM_SELECTOR=default
+
+    if [ -z "$(find $DKIM_KEYDIR -iname *.private)" ]; then
+	echo "OpenDKIM: Default DKIM keys for $DOMAIN doesn't exist, generating..."
+	opendkim-genkey -D $DKIM_KEYDIR -s $DKIM_SELECTOR -d $DOMAIN
+	echo "OpenDKIM: Default DKIM keys for $DOMAIN created in $DKIM_KEYDIR"
+    else
+	echo "OpenDKIM: Default DKIM keys for $DOMAIN exists, skip..."
+    fi
+
+    # $DKIM_SELECTOR.private is the private key for the domain
+    # $DKIM_SELECTOR.txt is the public key that will publish in DNS TXT record
+    echo "OpenDKIM: Regulating the permissions of Default DKIM Keys..."
+    chown -R root:opendkim $DKIM_KEYDIR
+    chmod 640 $DKIM_KEYDIR/$DKIM_SELECTOR.private
+    chmod 644 $DKIM_KEYDIR/$DKIM_SELECTOR.txt
+
+    echo "OpenDKIM: Showing contents of $DKIM_KEYDIR/$DKIM_SELECTOR.txt"
+    cat $DKIM_KEYDIR/$DKIM_SELECTOR.txt
+
+    DKIM_CONF=/etc/opendkim.conf
+    DKIM_KEY_TABLE=/etc/opendkim/KeyTable
+    DKIM_SIGNING_TABLE=/etc/opendkim/SigningTable
+    DKIM_TRUSTED_HOSTS=/etc/opendkim/TrustedHosts
+    echo "OpenDKIM: Configuring $DKIM_CONF..."
+    cat >> $DKIM_CONF <<EOF
+
+# Set by docker-postfix
+Mode                sv
+Socket              inet:8891@127.0.0.1
+
+Selector	    ${DKIM_SELECTOR}
+Domain              ${DOMAIN}
+KeyFile             ${DKIM_KEYDIR}/${DKIM_SELECTOR}.private
+Canonicalization    relaxed/simple
+ExternalIgnoreList  refile:${DKIM_TRUSTED_HOSTS}
+InternalHosts       refile:${DKIM_TRUSTED_HOSTS}
+KeyTable            refile:${DKIM_KEY_TABLE}
+SigningTable        refile:${DKIM_SIGNING_TABLE}
+EOF
+
+    echo "OpenDKIM: Configuring $DKIM_KEY_TABLE..."
+    cat >> $DKIM_KEY_TABLE <<EOF
+
+# Set by docker-postfix
+${DKIM_SELECTOR}._domainkey.${DOMAIN} ${DOMAIN}:${DKIM_SELECTOR}:${DKIM_KEYDIR}/${DKIM_SELECTOR}.private
+EOF
+
+    echo "OpenDKIM: Configuring $DKIM_SIGNING_TABLE..."
+    cat >> $DKIM_SIGNING_TABLE <<EOF
+
+# Set by docker-postfix
+*@${DOMAIN} ${DKIM_SELECTOR}._domainkey.${DOMAIN}
+EOF
+
+    echo "OpenDKIM: Configuring $DKIM_TRUSTED_HOSTS..."
+    cat >> $DKIM_TRUSTED_HOSTS <<EOF
+
+# Set by docker-postfix
+*.${DOMAIN}
+EOF
+
+    echo "OpenDKIM: Configuring Postfix..."
+    postconf -e 'smtpd_milters = inet:127.0.0.1:8891'
+    postconf -e 'non_smtpd_milters=$smtpd_milters'
+    postconf -e 'milter_default_action=accept'
+
+    ## Launch
     exec chaperone
 }
 

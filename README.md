@@ -121,7 +121,7 @@ PTR 记录，是电子邮件系统中的邮件交换记录的一种，也就是 
 
 PTR 记录的值应为安装 Postfix 时所设置的 `myhostname` 的值。设置完成后，通过 `dig -x IP` 来查看 PTR 记录是否生效。
 
-### 配置 SPF（Sender Policy Framework） 记录
+### 配置 SPF（Sender Policy Framework）记录
 
 > SPF 是为了防止冒充邮件发送方身份而产生的技术。
 
@@ -279,7 +279,8 @@ SPF 记录中还可以包含两种可选的 Modifier，一个 Modifier 只能出
 * [SPF: WHY?](http://www.openspf.org/Why)：为什么我发的邮件被拒绝了？
 * [RFC 4408](http://www.openspf.org/RFC_4408)：SPFv1 标准
 
-### 配置 DKIM 记录
+### 配置 DKIM（DomainKeys Identified Mail）记录
+DKIM 是另一种验证邮件有效性的方法。DKIM 在 DNS 公开一个公钥，然后用私钥对自己的邮件签名。邮件接收方查询发送方域名的 DNS 记录以获得公钥，然后验证签名是否有效。
 
 ## 测试
 * 测试工具：[Mail Tester](http://www.mail-tester.com/)
