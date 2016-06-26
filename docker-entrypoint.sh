@@ -84,34 +84,40 @@ EOF
     mkdir -p $TLSDIR
     TLS_CRT=$(find $TLSDIR -name *.crt)
     TLS_KEY=$(find $TLSDIR -name *.key)
+    TLS_CA=$(find $TLSDIR -name *.pem)
 
     if [ -n "$TLS_CRT" -a -n "$TLS_KEY" ]; then
-	echo "TLS: $CA and $PRIVATE_KEY are found, enabling..."
+	echo "TLS: $TLS_CRT and $TLS_KEY are found, enabling..."
 	# Configures the server certificate file and key file as well as the CA's
 	# intermediate certificate file.
 	postconf -e "smtpd_tls_cert_file = $TLS_CRT"
 	postconf -e "smtpd_tls_key_file= $TLS_KEY"
+
+	if [ -n "$TLS_CA" ]; then
+	    postconf -e "smtpd_tls_CAfile = $TLS_CA"
+	    postconf -e 'smtp_tls_CAfile = $smtpd_tls_CAfile'
+	fi
 	chown -R root:root $TLSDIR
 	chmod 0400 $TLSDIR/*.*
 
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP
 	# clients, but does not require that clients use TLS encryption.
-	postconf -e "smtpd_use_tls = yes"
-	postconf -e "smtpd_tls_security_level = may"
+	postconf -e 'smtpd_use_tls = yes'
+	postconf -e 'smtpd_tls_security_level = may'
 
 	# Enable logging of summary message for TLS handshake and to include
 	# information about the protocol and cipher used as well as the client and
 	# issuer CommonName
-	postconf -e "smtpd_tls_loglevel = 0"
-	postconf -e "smtpd_tls_received_header = yes"
+	postconf -e 'smtpd_tls_loglevel = 0'
+	postconf -e 'smtpd_tls_received_header = yes'
 
 	# Postfix SMTP server and the remote SMTP client negotiate a session, which
 	# takes some computer time and network bandwidth. SSL protocol versions other
 	# than SSLv2 support resumption of cached sessions.
-	postconf -e "smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_scache"
+	postconf -e 'smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_scache'
 	# Cached Postfix SMTP server session information expires after a certain
 	# amount of time.RFC2246 recommends a maximum of 24 hours.
-	postconf -e "smtpd_tls_session_cache_timeout = 10800s"
+	postconf -e 'smtpd_tls_session_cache_timeout = 10800s'
     else
 	echo "TLS: Certificate and Private key are missing, skip..."
     fi
