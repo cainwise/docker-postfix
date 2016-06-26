@@ -40,10 +40,7 @@
 支持的 SMTP 验证的 Postfix 容器，必选的 OpenDKIM 支持以及可选的 TLS 支持。
 
 ## 使用方法
-
-> `user:passwd` 形如 `username@mail.example.com:password`。
-
-### 创建 Postfix 容器
+## 创建 Postfix 容器
 
 ```sh
 shell> docker run
@@ -56,6 +53,8 @@ shell> docker run
            -v tls:/etc/postfix/tls \ # TLS 支持，可选
            --name postfix -d m31271n/postfix
 ```
+
+> 在 SMTP 客户端中，填写用户名为 `user1@mail.example.com`，填写密码为 `passwd1`。
 
 ## DNS 设置
 ### 理论（引自 Postfix 权威指南）
