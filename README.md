@@ -117,9 +117,9 @@ PTR 记录，是电子邮件系统中的邮件交换记录的一种，也就是 
 
 因此，你的 Postfix 系统的 IP 地址必须在 DNS 里有一个指向 Postfix 主机规范名称的 PTR 记录，这样才能保证所有 SMTP 服务器都愿意收下你寄出的邮件。
 
-> PTR 记录的设置多由主机提供商提供。
+> PTR 记录的设置多由主机提供商提供，如果没有显式提供，就要工单联系，请求提供。
 
-可以通过 `dig -x IP` 来查看 PTR 记录是否设置正常。
+PTR 记录的值应为安装 Postfix 时所设置的 `myhostname` 的值。设置完成后，通过 `dig -x IP` 来查看 PTR 记录是否生效。
 
 ### 配置 SPF（Sender Policy Framework） 记录
 
