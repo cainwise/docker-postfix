@@ -47,24 +47,26 @@
 
 ### 创建 Postfix 容器
 
-    ```sh
-    shell> docker run
-               -p 25:25 \
-               -p 587:587 \ # TLS 支持，可选
-               -e MTA_DOMAIN=example.com \
-               -e MTA_HOST=mail.example.com \
-               -e MTA_USERS=user:passwd \     # 要创建多个用户时，使用半角逗号隔开: -e MTA_USERS=user1:passwd1,...,userN:passwdN
-               -v dkim_keys:/etc/opendkim/keys \
-               -v tls:/etc/postfix/tls \ # TLS 支持，可选
-               --name postfix -d m31271n/postfix
-    ```
+```sh
+shell> docker run
+           -p 25:25 \
+           -p 587:587 \ # TLS 支持，可选
+           -e MTA_DOMAIN=example.com \
+           -e MTA_HOST=mail.example.com \
+           -e MTA_USERS=user:passwd \     # 要创建多个用户时，使用半角逗号隔开: -e MTA_USERS=user1:passwd1,...,userN:passwdN
+           -v dkim_keys:/etc/opendkim/keys \
+           -v tls:/etc/postfix/tls \ # TLS 支持，可选
+           --name postfix -d m31271n/postfix
+```
 
 ## DNS 设置
 ### 理论（引自 Postfix 权威指南）
-与邮件系统的相关的 DNS 记录有：
+想要让一个邮件系统基本工作，相关的 DNS 记录有：
 
 * A
 * MX
+
+> 为什么说“基本工作”？因为邮件系统还需很多有关邮件有效性验证的工作，而这些工作还需要设置 DNS 记录，所以这里这么说。
 
 #### 所有 MX 主机必须有合法的 A 记录
 MX 记录所指的主机名称，必须要有一笔有效的 A 记录。因为 MTA 在选出收信主机之后，还必须查出其 IP 地址才能连接。
