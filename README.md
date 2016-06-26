@@ -1,3 +1,41 @@
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+**Table of Contents**
+
+- [docker-postfix](#docker-postfix)
+    - [使用方法](#)
+        - [创建支持 SMTP 验证的 Postfix 容器](#-smtp--postfix-)
+        - [启用 OpenDKIM](#-opendkim)
+        - [启用 TLS(587)](#-tls587)
+    - [DNS 设置](#dns-)
+        - [理论（引自 Postfix 权威指南）](#-postfix-)
+            - [所有 MX 主机必须有合法的 A 记录](#-mx--a-)
+            - [MX 记录不可以指向别名](#mx-)
+            - [MX 记录应该指向主机名称，而非 IP 地址](#mx--ip-)
+            - [PTR 记录](#ptr-)
+        - [实践](#)
+    - [避免你的邮件被当成垃圾邮件](#)
+        - [确定发送的不是垃圾](#)
+        - [查看你是否在黑名单中](#)
+        - [配置 PTR 记录](#-ptr-)
+        - [配置 SPF（Sender Policy Framework） 记录](#-spfsender-policy-framework-)
+            - [SPF 记录的语法规则](#spf-)
+            - [Mechanism](#mechanism)
+                - [all](#all)
+                - [ip4](#ip4)
+                - [ip6](#ip6)
+                - [a / mx](#a--mx)
+                - [include](#include)
+                - [exists](#exists)
+                - [ptr](#ptr)
+            - [Modifier](#modifier)
+                - [redirect](#redirect)
+                - [exp](#exp)
+        - [配置 DKIM 记录](#-dkim-)
+    - [测试](#)
+    - [参考](#)
+
+<!-- markdown-toc end -->
+
 # docker-postfix
 支持的 SMTP 验证的 Postfix 容器。 可选的 OpenDKIM 和 TLS 支持。
 
