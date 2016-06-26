@@ -3,9 +3,7 @@
 
 - [docker-postfix](#docker-postfix)
     - [使用方法](#)
-        - [创建支持 SMTP 验证的 Postfix 容器](#-smtp--postfix-)
-        - [启用 OpenDKIM](#-opendkim)
-        - [启用 TLS(587)](#-tls587)
+        - [创建 Postfix 容器](#-postfix-)
     - [DNS 设置](#dns-)
         - [理论（引自 Postfix 权威指南）](#-postfix-)
             - [所有 MX 主机必须有合法的 A 记录](#-mx--a-)
