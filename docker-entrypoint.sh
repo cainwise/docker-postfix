@@ -105,10 +105,12 @@ EOF
 	chmod -R 0700 $TLSDIR
 	chmod -R 0400 $TLSDIR/*
 
+	# If enable TLS, then use TLS auth only.
+	postconf -e 'smtpd_tls_auth_only = yes'
+
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP
 	# clients, but does not require that clients use TLS encryption.
 	postconf -e 'smtpd_use_tls = yes'
-	#postconf -e 'smtpd_tls_auth_only = yes'
 
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP clients,
 	# but does not require that clients use TLS encryption.
