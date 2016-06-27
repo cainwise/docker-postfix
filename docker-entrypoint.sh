@@ -102,7 +102,8 @@ EOF
 	fi
 
 	chown -R root:root $TLSDIR
-	chmod -R 0400 $TLSDIR
+	chmod -R 0700 $TLSDIR
+	chmod -R 0400 $TLSDIR/*
 
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP
 	# clients, but does not require that clients use TLS encryption.
