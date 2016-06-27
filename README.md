@@ -316,3 +316,6 @@ DMARC 记录中用来建立数据反馈机制的参数：
 + [Postfix SASL Howto](http://www.postfix.org/SASL_README.html)
 + [Managing multiple Postfix instances on a single host](http://www.postfix.org/MULTI_INSTANCE_README.html)
 + [SPF 记录：原理、语法及配置方法简介](https://www.renfei.org/blog/introduction-to-spf.html)
+
+## 许可证
+GPL-3.0
