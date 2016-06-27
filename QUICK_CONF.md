@@ -60,4 +60,43 @@ shell> docker run
 |--------|-------------------|---------------------|
 | TXT    | _dmarc.example.com| `v=DMARC1; p=reject; rua=postmaster@mexample.com` |
 
+## 测试
+
+用一个简单 Node 程序来测试邮件服务是否可以正常工作。
+
+```js
+'use strict';
+
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  host: 'mail.example.com',
+  port: 25,
+  secure: false,
+  requireTLS: true,
+  auth: {
+    user: 'user@mail.example.com',
+    pass: 'passwd'
+  },
+});
+
+// setup e-mail data with unicode symbols
+var mailOptions = {
+  from: '"BOSS" <boss@example.com>', // sender address
+  to: '<your mail>', // list of receivers
+  subject: '风中的来信', // Subject line
+  text: '为了防止垃圾邮件，现在有许多 SMTP 服务器要求客户端的 IP 地址必须要能够查到有效的 PTR 记录。', // plaintext body
+  html: '为了防止垃圾邮件，现在有许多 SMTP 服务器要求客户端的 IP 地址必须要能够查到有效的 PTR 记录。' // html body
+};
+
+// send mail with defined transport object
+transporter.sendMail(mailOptions, function(error, info){
+  if(error){
+    return console.log(error);
+  }
+  console.log('Message sent: ' + info.response);
+})
+```
+
 （完）
+
