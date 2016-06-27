@@ -79,9 +79,9 @@ EOF
     chown postfix.saslauth /etc/sasldb2
 
     ## TLS configuration
-
     TLSDIR=/etc/postfix/tls
     mkdir -p $TLSDIR
+
     TLS_CRT=$(find $TLSDIR -name *.crt)
     TLS_KEY=$(find $TLSDIR -name *.key)
     TLS_CA=$(find $TLSDIR -name *.pem)
@@ -96,19 +96,21 @@ EOF
 	if [ -n "$TLS_CA" ]; then
 	    postconf -e "smtpd_tls_CAfile = $TLS_CA"
 	fi
+
 	chown -R root:root $TLSDIR
-	chmod 0400 $TLSDIR/*.*
+	chmod -R 0400 $TLSDIR
 
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP
 	# clients, but does not require that clients use TLS encryption.
 	postconf -e 'smtpd_use_tls = yes'
-	postconf -e 'smtpd_tls_auth_only = yes'
+	#postconf -e 'smtpd_tls_auth_only = yes'
+
+	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP clients,
+	# but does not require that clients use TLS encryption.
 	postconf -e 'smtpd_tls_security_level = may'
 
-	# Enable logging of summary message for TLS handshake and to include
-	# information about the protocol and cipher used as well as the client and
-	# issuer CommonName
-	postconf -e 'smtpd_tls_loglevel = 1'
+	# Server-side TLS activity logging
+	postconf -e 'smtpd_tls_loglevel = 2'
 	postconf -e 'smtpd_tls_received_header = yes'
 
 	# Postfix SMTP server and the remote SMTP client negotiate a session, which
@@ -117,7 +119,7 @@ EOF
 	postconf -e 'smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_scache'
 	# Cached Postfix SMTP server session information expires after a certain
 	# amount of time.RFC2246 recommends a maximum of 24 hours.
-	postconf -e 'smtpd_tls_session_cache_timeout = 10800s'
+	postconf -e 'smtpd_tls_session_cache_timeout = 3600s'
     else
 	echo "TLS: Certificate and Private key are missing, skip..."
     fi
