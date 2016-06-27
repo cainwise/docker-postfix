@@ -93,8 +93,12 @@ EOF
 	postconf -e "smtpd_tls_cert_file = $TLS_CRT"
 	postconf -e "smtpd_tls_key_file= $TLS_KEY"
 
+	postconf -e "smtp_tls_cert_file = $TLS_CRT"
+	postconf -e "smtp_tls_key_file= $TLS_KEY"
+
 	if [ -n "$TLS_CA" ]; then
 	    postconf -e "smtpd_tls_CAfile = $TLS_CA"
+	    postconf -e "smtp_tls_CAfile = $TLS_CA"
 	fi
 
 	chown -R root:root $TLSDIR
@@ -108,18 +112,27 @@ EOF
 	# With this, the Postfix SMTP server announces STARTTLS support to remote SMTP clients,
 	# but does not require that clients use TLS encryption.
 	postconf -e 'smtpd_tls_security_level = may'
+	postconf -e 'smtp_tls_security_level = may'
 
-	# Server-side TLS activity logging
-	postconf -e 'smtpd_tls_loglevel = 2'
+	# TLS activity logging
+	if [ -n "$DEBUG" ]; then
+	    postconf -e 'smtpd_tls_loglevel = 2'
+	    postconf -e 'smtp_tls_loglevel = 2'
+	else
+	    postconf -e 'smtpd_tls_loglevel = 0'
+	    postconf -e 'smtp_tls_loglevel = 0'
+	fi
 	postconf -e 'smtpd_tls_received_header = yes'
 
 	# Postfix SMTP server and the remote SMTP client negotiate a session, which
 	# takes some computer time and network bandwidth. SSL protocol versions other
 	# than SSLv2 support resumption of cached sessions.
 	postconf -e 'smtpd_tls_session_cache_database = btree:/var/lib/postfix/smtpd_scache'
+	postconf -e 'smtp_tls_session_cache_database = btree:/var/lib/postfix/smtp_scache'
 	# Cached Postfix SMTP server session information expires after a certain
 	# amount of time.RFC2246 recommends a maximum of 24 hours.
 	postconf -e 'smtpd_tls_session_cache_timeout = 3600s'
+	postconf -e 'smtp_tls_session_cache_timeout = 3600s'
     else
 	echo "TLS: Certificate and Private key are missing, skip..."
     fi
