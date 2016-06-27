@@ -2,16 +2,16 @@ version: '2'
 
 services:
   postfix:
-    image: postfix
+    image: m31271n/postfix
     container_name: postfix
     environment:
       - MTA_DOMAIN=example.com
       - MTA_HOST=mail.example.com
-      - MTA_USERS=test@mail.example.com:test
+      - MTA_USERS=test_user:test_password
+      - DEBUG=true
     volumes:
       - ./dkim_keys:/etc/opendkim/keys
       - ./tls:/etc/postfix/tls
     ports:
       - "25:25"
-      - "587:587"
     restart: always
