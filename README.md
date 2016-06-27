@@ -37,7 +37,7 @@
 <!-- markdown-toc end -->
 
 # docker-postfix
-支持的 SMTP 验证的 Postfix 容器，必选的 OpenDKIM 支持以及可选的 TLS 支持。
+支持的 SMTP 验证的 Postfix 容器，必选的 OpenDKIM 支持以及可选的 STARTTLS 支持。
 
 ## 使用方法
 ## 创建 Postfix 容器
@@ -45,16 +45,17 @@
 ```sh
 shell> docker run
            -p 25:25 \
-           -p 587:587 \ # TLS 支持，可选
            -e MTA_DOMAIN=example.com \
            -e MTA_HOST=mail.example.com \
            -e MTA_USERS=user:passwd \     # 要创建多个用户时，使用半角逗号隔开: -e MTA_USERS=user1:passwd1,...,userN:passwdN
            -v dkim_keys:/etc/opendkim/keys \
-           -v tls:/etc/postfix/tls \ # TLS 支持，可选
+           -v tls:/etc/postfix/tls \ # TLS 支持，可选。开启后，为 SMTP 使用 STARTTLS。
            --name postfix -d m31271n/postfix
 ```
 
 > 在 SMTP 客户端中，填写用户名为 `user1@mail.example.com`，填写密码为 `passwd1`。
+
+如果你不想阅读下面这些内容，只想快速设置一个 Postfix，可以查看 [快速设置](QUICK_CONF.md)。
 
 ## DNS 设置
 ### 理论（引自 Postfix 权威指南）
@@ -303,6 +304,10 @@ DMARC 记录中用来建立数据反馈机制的参数：
 ## 测试
 * 测试工具：[Mail Tester](http://www.mail-tester.com/)
 * 测试方法：向页面上的邮箱随便发送一封邮件，然后点击提交可以看到测试结果，其中会有一些优化建议。
+
+## 未完成
+* 设置 alias 地址
+* 检验来信 SPF
 
 ## 参考
 + 《Postfix 权威指南》
