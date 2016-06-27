@@ -3,7 +3,7 @@
 
 - [docker-postfix](#docker-postfix)
     - [使用方法](#)
-        - [创建 Postfix 容器](#-postfix-)
+    - [创建 Postfix 容器](#-postfix-)
     - [DNS 设置](#dns-)
         - [理论（引自 Postfix 权威指南）](#-postfix-)
             - [所有 MX 主机必须有合法的 A 记录](#-mx--a-)
@@ -32,7 +32,9 @@
         - [配置 DKIM（DomainKeys Identified Mail）记录](#-dkimdomainkeys-identified-mail)
         - [配置 DMARC 记录](#-dmarc-)
     - [测试](#)
+    - [未完成](#)
     - [参考](#)
+    - [许可证](#)
 
 <!-- markdown-toc end -->
 
