@@ -2,39 +2,39 @@
 **Table of Contents**
 
 - [docker-postfix](#docker-postfix)
-    - [使用方法](#)
-    - [创建 Postfix 容器](#-postfix-)
-    - [DNS 设置](#dns-)
-        - [理论（引自 Postfix 权威指南）](#-postfix-)
-            - [所有 MX 主机必须有合法的 A 记录](#-mx--a-)
-            - [MX 记录不可以指向别名](#mx-)
-            - [MX 记录应该指向主机名称，而非 IP 地址](#mx--ip-)
-        - [实践](#)
-    - [避免你的邮件被当成垃圾邮件](#)
-        - [确定发送的不是垃圾](#)
-        - [查看你是否在黑名单中](#)
-        - [配置 PTR 记录](#-ptr-)
-        - [配置 SPF（Sender Policy Framework）记录](#-spfsender-policy-framework)
-            - [SPF 记录的语法规则](#spf-)
+    - [使用方法](#使用方法)
+    - [创建 Postfix 容器](#创建-postfix-容器)
+    - [DNS 设置](#dns-设置)
+        - [理论](#理论)
+            - [所有 MX 主机必须有合法的 A 记录](#所有-mx-主机必须有合法的-a-记录)
+            - [MX 记录不可以指向别名](#mx-记录不可以指向别名)
+            - [MX 记录应该指向主机名称，而非 IP 地址](#mx-记录应该指向主机名称，而非-ip-地址)
+        - [实践](#实践)
+    - [避免你的邮件被当成垃圾邮件](#避免你的邮件被当成垃圾邮件)
+        - [确定发送的不是垃圾](#确定发送的不是垃圾)
+        - [查看你是否在黑名单中](#查看你是否在黑名单中)
+        - [配置 PTR 记录](#配置-ptr-记录)
+        - [配置 SPF（Sender Policy Framework）记录](#配置-spf（sender-policy-framework）记录)
+            - [SPF 记录的语法规则](#spf-记录的语法规则)
             - [Mechanism](#mechanism)
                 - [all](#all)
                 - [ip4](#ip4)
                 - [ip6](#ip6)
-                - [a / mx](#a--mx)
+                - [a / mx](#a-/-mx)
                 - [include](#include)
                 - [exists](#exists)
                 - [ptr](#ptr)
             - [Modifier](#modifier)
                 - [redirect](#redirect)
                 - [exp](#exp)
-            - [测试 SPF](#-spf)
-            - [了解更多](#)
-        - [配置 DKIM（DomainKeys Identified Mail）记录](#-dkimdomainkeys-identified-mail)
-        - [配置 DMARC 记录](#-dmarc-)
-    - [测试](#)
-    - [未完成](#)
-    - [参考](#)
-    - [许可证](#)
+            - [测试 SPF](#测试-spf)
+            - [了解更多](#了解更多)
+        - [配置 DKIM（DomainKeys Identified Mail）记录](#配置-dkim（domainkeys-identified-mail）记录)
+        - [配置 DMARC 记录](#配置-dmarc-记录)
+    - [测试](#测试)
+    - [未完成](#未完成)
+    - [参考](#参考)
+    - [许可证](#许可证)
 
 <!-- markdown-toc end -->
 
@@ -60,7 +60,7 @@ shell> docker run
 如果你不想阅读下面这些内容，只想快速设置一个 Postfix，可以查看 [快速设置](QUICK_CONF.md)。
 
 ## DNS 设置
-### 理论（引自 Postfix 权威指南）
+### 理论
 想要让一个邮件系统基本工作，相关的 DNS 记录有：
 
 * A
