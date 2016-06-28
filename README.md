@@ -1,26 +1,29 @@
+# docker-postfix
+支持的 SMTP 验证的 Postfix 容器，必选的 OpenDKIM 支持以及可选的 STARTTLS 支持。
+
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
 
-- [docker-postfix](#docker-postfix)
+- [docker-postfix](#dockerpostfix)
     - [使用方法](#使用方法)
     - [创建 Postfix 容器](#创建-postfix-容器)
     - [DNS 设置](#dns-设置)
         - [理论](#理论)
             - [所有 MX 主机必须有合法的 A 记录](#所有-mx-主机必须有合法的-a-记录)
             - [MX 记录不可以指向别名](#mx-记录不可以指向别名)
-            - [MX 记录应该指向主机名称，而非 IP 地址](#mx-记录应该指向主机名称，而非-ip-地址)
+            - [MX 记录应该指向主机名称，而非 IP 地址](#mx-记录应该指向主机名称而非-ip-地址)
         - [实践](#实践)
     - [避免你的邮件被当成垃圾邮件](#避免你的邮件被当成垃圾邮件)
         - [确定发送的不是垃圾](#确定发送的不是垃圾)
         - [查看你是否在黑名单中](#查看你是否在黑名单中)
         - [配置 PTR 记录](#配置-ptr-记录)
-        - [配置 SPF（Sender Policy Framework）记录](#配置-spf（sender-policy-framework）记录)
+        - [配置 SPF（Sender Policy Framework）记录](#配置-spfsender-policy-framework记录)
             - [SPF 记录的语法规则](#spf-记录的语法规则)
             - [Mechanism](#mechanism)
                 - [all](#all)
                 - [ip4](#ip4)
                 - [ip6](#ip6)
-                - [a / mx](#a-/-mx)
+                - [a / mx](#a--mx)
                 - [include](#include)
                 - [exists](#exists)
                 - [ptr](#ptr)
@@ -29,7 +32,7 @@
                 - [exp](#exp)
             - [测试 SPF](#测试-spf)
             - [了解更多](#了解更多)
-        - [配置 DKIM（DomainKeys Identified Mail）记录](#配置-dkim（domainkeys-identified-mail）记录)
+        - [配置 DKIM（DomainKeys Identified Mail）记录](#配置-dkimdomainkeys-identified-mail记录)
         - [配置 DMARC 记录](#配置-dmarc-记录)
     - [测试](#测试)
     - [未完成](#未完成)
@@ -37,9 +40,6 @@
     - [许可证](#许可证)
 
 <!-- markdown-toc end -->
-
-# docker-postfix
-支持的 SMTP 验证的 Postfix 容器，必选的 OpenDKIM 支持以及可选的 STARTTLS 支持。
 
 ## 使用方法
 ## 创建 Postfix 容器
