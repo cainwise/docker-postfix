@@ -10,7 +10,7 @@
 
 ## 创建 Postfix 容器
 
-创建目录 ｀dkim_keys` 和 `tls`。
+创建目录 `dkim_keys` 和 `tls`。
 
 在目录 `tls` 中放置证书和私钥，运行容器时，STARTTLS 支持将自动开启。
 
