@@ -277,8 +277,11 @@ DKIM 是另一种验证邮件有效性的方法。DKIM 在 DNS 公开一个公�
 > docker-postfix 已经集成了 OpenDKIM。只需要将 Docker 容器日志中显示的公钥添加到 DNS 即可。
 
 ### 配置 DMARC 记录
-DMARC 记录允许邮件发送方声明自己的邮件被 SPF 和／或 DKIM 保护，并且在 SPF 和/或 DKIM 验证未通过时，给出操作指示。
-同时还能在邮件收发双方之间建立起一个数据反馈机制。
+DMARC 全称是 Domain-based Message Authentication, Reporting and Conformance，是一个构建在 SPF 和 DKIM 技术之上的解决方案。
+
+DMARC 的核心思想是邮件的发送方通过特定方式 (DNS) 公开标明自己会用到的发件服务器 (SPF)、并对发出的邮件内容进行签名 (DKIM)，而邮件的接受方则检查收到的邮件是否来自发送方授权过的服务器、并且核对签名是否有效。
+
+对于未能通过前述检查项目的邮件，接受方则按照发送方指定的策略进行处理【比如直接投入垃圾箱或者拒收】，从而有效避免伪造的钓鱼邮件进入用户的收件箱。同时，还能在邮件收发双方之间建立起一个数据反馈机制。
 
 更详细内容可以查看 [DMARC Overview](https://dmarc.org/overview/)。
 
