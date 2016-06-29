@@ -34,6 +34,8 @@
             - [了解更多](#了解更多)
         - [配置 DKIM（DomainKeys Identified Mail）记录](#配置-dkimdomainkeys-identified-mail记录)
         - [配置 DMARC 记录](#配置-dmarc-记录)
+        - [这些都配置了，但是还是被当成垃圾邮件了](#这些都配置了但是还是被当成垃圾邮件了)
+            - [Gmail](#gmail)
     - [测试](#测试)
     - [未完成](#未完成)
     - [参考](#参考)
